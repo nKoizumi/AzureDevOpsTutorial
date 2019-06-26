@@ -5,13 +5,45 @@ using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
 using AspNetCore.Web.Models;
+using AspNetCore.Web.Data;
+using AspNetCore.Web.Services;
+using Microsoft.Extensions.Logging;
+using Microsoft.ApplicationInsights;
 
 namespace AspNetCore.Web.Controllers
 {
     public class HomeController : Controller
     {
+        private readonly ApplicationDbContext _context;
+        private readonly IHomeService _homeService;
+        private readonly ILogger _logger;
+        private TelemetryClient _telemetry;
+
+        public HomeController(ApplicationDbContext context
+            , IHomeService homeService
+            , ILogger<HomeController> logger
+            , TelemetryClient telemetry)
+        {
+            _context = context;
+            _homeService = homeService;
+            _logger = logger;
+            _telemetry = telemetry;
+        }
+
         public IActionResult Index()
         {
+            //_telemetry.TrackTrace("これはカスタムログです");
+
+            //if (!_context.Blogs.Any())
+            //{
+            //    _context.Blogs.Add(new Blog { Name = "Hello Blog" });
+            //    _context.SaveChanges();
+            //}
+
+            //var blogs = _context.Blogs.ToList();
+
+            //return View(blogs);
+
             return View();
         }
 
@@ -24,9 +56,10 @@ namespace AspNetCore.Web.Controllers
 
         public IActionResult Contact()
         {
-            ViewData["Message"] = "Your contact page.";
+            throw new Exception();
+            //ViewData["Message"] = "Your contact page.";
 
-            return View();
+            //return View();
         }
 
         public IActionResult Privacy()

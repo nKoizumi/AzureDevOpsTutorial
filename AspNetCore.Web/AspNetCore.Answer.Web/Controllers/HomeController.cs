@@ -8,6 +8,7 @@ using AspNetCore.Answer.Web.Models;
 using AspNetCore.Answer.Web.Data;
 using AspNetCore.Answer.Web.Services;
 using Microsoft.Extensions.Logging;
+using Microsoft.ApplicationInsights;
 
 namespace AspNetCore.Answer.Web.Controllers
 {
@@ -16,19 +17,23 @@ namespace AspNetCore.Answer.Web.Controllers
         private readonly ApplicationDbContext _context;
         private readonly IHomeService _homeService;
         private readonly ILogger _logger;
+        private TelemetryClient _telemetry;
 
         public HomeController(ApplicationDbContext context
             , IHomeService homeService
-            , ILogger<HomeController> logger)
+            , ILogger<HomeController> logger
+            , TelemetryClient telemetry)
         {
             _context = context;
             _homeService = homeService;
             _logger = logger;
+            _telemetry = telemetry;
         }
 
         public IActionResult Index()
         {
-            _logger.LogInformation("これはカスタムログです");
+            _telemetry.TrackTrace("これはカスタムログです");
+
             if (!_context.Blogs.Any())
             {
                 _context.Blogs.Add(new Blog { Name = "Hello Blog" });
